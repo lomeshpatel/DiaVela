@@ -1,0 +1,45 @@
+Blood Glucose Monitoring and Continuous Glucose Monitors (CGM)
+
+SELF-MONITORING OF BLOOD GLUCOSE (SMBG):
+Using a fingerstick glucometer to check blood glucose levels.
+
+When to check (varies by treatment plan):
+- Before meals (fasting)
+- 2 hours after meals (postprandial)
+- Before bedtime
+- Before, during, and after exercise
+- When feeling symptoms of low or high blood sugar
+- Before driving
+- At 2-3 AM if nocturnal hypoglycemia is suspected
+
+Glucometer accuracy: should be within 15% or 15 mg/dL of laboratory values. Check calibration, expiration dates, and proper strip storage.
+
+CONTINUOUS GLUCOSE MONITORS (CGM):
+CGMs use a small sensor inserted under the skin to measure glucose in interstitial fluid every 1-5 minutes.
+
+MAJOR CGM SYSTEMS:
+- Dexcom G7/G6: 10-day wear, real-time readings, integrates with insulin pumps
+- FreeStyle Libre 3 (Abbott): 14-day wear, real-time Bluetooth readings, smallest sensor
+- Medtronic Guardian: integrates with Medtronic insulin pumps
+- Eversense E3: implantable sensor, 365-day wear (US), physician-inserted
+
+CGM METRICS (Time in Range - TIR):
+- Target range for most adults: 70-180 mg/dL
+- Goal TIR: >70% of the time
+- Time below range (<70 mg/dL): <4% (goal <1% below 54 mg/dL)
+- Time above range (>180 mg/dL): <25%
+
+CGM BENEFITS:
+- Continuous trend data (not just snapshots)
+- Alerts for high/low glucose
+- Reduces hypoglycemia risk and anxiety
+- Better HbA1c achievement
+- Identifies patterns (dawn phenomenon, post-meal spikes)
+
+CGM LIMITATIONS:
+- Lag time of 5-15 minutes vs. blood glucose
+- May require fingerstick confirmation for treatment decisions (older models)
+- Sensor can be inaccurate if placed incorrectly or during compression (sleeping on sensor)
+- Cost (insurance coverage varies)
+
+Consult your endocrinologist or diabetes care team about which monitoring approach is right for you.

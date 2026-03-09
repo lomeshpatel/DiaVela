@@ -1,0 +1,39 @@
+Common Diabetes Medications
+
+NON-INSULIN MEDICATIONS FOR TYPE 2 DIABETES:
+
+METFORMIN (Glucophage):
+- First-line medication for type 2 diabetes
+- Mechanism: reduces glucose production in the liver, improves insulin sensitivity
+- Benefits: weight neutral/modest weight loss, low hypoglycemia risk, cardioprotective, affordable
+- Side effects: GI upset (nausea, diarrhea) — take with food; rare risk of lactic acidosis
+- Take with meals
+
+SGLT2 INHIBITORS (Empagliflozin/Jardiance, Dapagliflozin/Farxiga, Canagliflozin/Invokana):
+- Mechanism: cause kidneys to excrete excess glucose in urine
+- Benefits: cardiovascular and kidney protection, weight loss, blood pressure reduction
+- Side effects: genital yeast infections, UTIs, increased urination, rare DKA risk
+- Take in the morning
+
+GLP-1 RECEPTOR AGONISTS (Semaglutide/Ozempic/Wegovy, Liraglutide/Victoza, Dulaglutide/Trulicity):
+- Mechanism: mimic GLP-1 hormone — stimulate insulin, suppress glucagon, slow gastric emptying
+- Benefits: significant weight loss, cardiovascular protection, once weekly dosing available
+- Side effects: nausea, vomiting, diarrhea (usually improves), rare pancreatitis
+- Injectable (semaglutide also available as oral pill Rybelsus)
+
+DPP-4 INHIBITORS (Sitagliptin/Januvia, Saxagliptin/Onglyza, Alogliptin/Nesina):
+- Mechanism: increase incretin levels, stimulate insulin release
+- Benefits: weight neutral, low hypoglycemia risk, well tolerated
+- Side effects: nasopharyngitis, joint pain, rare pancreatitis
+
+SULFONYLUREAS (Glipizide, Glimepiride, Glyburide):
+- Mechanism: stimulate pancreas to produce more insulin
+- Benefits: inexpensive, effective, long track record
+- Side effects: hypoglycemia (significant risk), weight gain
+
+THIAZOLIDINEDIONES (Pioglitazone/Actos):
+- Mechanism: improve insulin sensitivity in fat and muscle
+- Benefits: durable effect, may protect pancreatic beta cells
+- Side effects: weight gain, fluid retention, increased fracture risk, bladder cancer risk (pioglitazone)
+
+Always take medications as prescribed. Never stop or change doses without consulting your healthcare provider.

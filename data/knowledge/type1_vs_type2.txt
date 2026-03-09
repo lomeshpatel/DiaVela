@@ -1,0 +1,31 @@
+Type 1 vs Type 2 Diabetes
+
+TYPE 1 DIABETES:
+- Autoimmune condition: the immune system destroys insulin-producing beta cells in the pancreas
+- The body produces little or no insulin
+- Onset: typically childhood or young adulthood, but can occur at any age
+- Treatment: requires insulin therapy (multiple daily injections or insulin pump)
+- About 5-10% of all diabetes cases
+- Not preventable; not caused by diet or lifestyle
+- Symptoms appear quickly: extreme thirst, frequent urination, weight loss, fatigue, blurred vision
+
+TYPE 2 DIABETES:
+- The body doesn't use insulin effectively (insulin resistance) and can't make enough insulin
+- Most common form: ~90-95% of all diabetes cases
+- Strong association with overweight/obesity, physical inactivity, family history
+- Onset: typically adults 45+, but increasingly in younger people
+- Treatment: lifestyle changes, oral medications (e.g., metformin), and sometimes insulin
+- Can often be prevented or delayed with healthy lifestyle
+- Symptoms develop gradually; some people have no symptoms initially
+
+GESTATIONAL DIABETES:
+- Develops during pregnancy
+- Usually resolves after delivery
+- Increases risk of type 2 diabetes later in life
+
+PREDIABETES:
+- Blood sugar higher than normal but not yet type 2 diabetes (HbA1c 5.7-6.4%)
+- Affects ~96 million American adults
+- Can often be reversed with lifestyle changes (5-7% weight loss, 150 min/week exercise)
+
+Consult your healthcare provider for diagnosis and personalized treatment.

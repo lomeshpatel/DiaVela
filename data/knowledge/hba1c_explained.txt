@@ -1,0 +1,25 @@
+HbA1c (Hemoglobin A1c) Explained
+
+HbA1c measures your average blood glucose over the past 2-3 months. It reflects the percentage of hemoglobin proteins in your blood that have glucose attached.
+
+HbA1c ranges:
+- Normal (no diabetes): Below 5.7%
+- Prediabetes: 5.7% to 6.4%
+- Diabetes diagnosis: 6.5% or higher
+- Well-controlled diabetes target: Below 7% (for most adults)
+- Higher target (less stringent): 7-8% (for elderly, limited life expectancy, or frequent hypoglycemia)
+
+Approximate average blood glucose by HbA1c:
+- 6%   → ~126 mg/dL
+- 7%   → ~154 mg/dL
+- 8%   → ~183 mg/dL
+- 9%   → ~212 mg/dL
+- 10%  → ~240 mg/dL
+- 11%  → ~269 mg/dL
+- 12%  → ~298 mg/dL
+
+HbA1c is typically measured every 3 months in people not meeting treatment goals, and every 6 months in those who are stable and meeting goals.
+
+Limitations: HbA1c may not accurately reflect glucose control in people with certain conditions (sickle cell disease, hemolytic anemia, recent blood transfusion, iron deficiency anemia).
+
+Always consult your healthcare provider for interpretation of your HbA1c results.

@@ -1,0 +1,18 @@
+Blood Glucose Targets for Adults with Diabetes (ADA Guidelines)
+
+For most non-pregnant adults with diabetes, the American Diabetes Association recommends:
+- Before meals (fasting/preprandial): 80-130 mg/dL
+- 2 hours after meals (postprandial): Less than 180 mg/dL
+- HbA1c target: Less than 7% for most adults
+
+Hypoglycemia (low blood sugar) is defined as blood glucose below 70 mg/dL. Severe hypoglycemia occurs below 54 mg/dL and requires immediate treatment.
+
+Hyperglycemia (high blood sugar) occurs when blood glucose exceeds 180 mg/dL after meals or 130 mg/dL fasting.
+
+Signs of hypoglycemia: shakiness, sweating, confusion, rapid heartbeat, hunger, dizziness. Treat with 15g fast-acting carbohydrates (e.g., glucose tablets, 4 oz juice).
+
+Signs of hyperglycemia: frequent urination, increased thirst, fatigue, blurred vision, headache.
+
+The 15-15 rule for mild hypoglycemia: consume 15g carbohydrates, wait 15 minutes, recheck blood sugar. Repeat if still below 70 mg/dL.
+
+Always consult your healthcare provider to determine your individual blood glucose targets.
