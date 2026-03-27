@@ -17,7 +17,7 @@ export default function AppShell() {
       <div className="flex flex-1 overflow-hidden">
         {/* Dashboard panel — sidebar on desktop, full-width on mobile when selected */}
         <aside
-          className={`overflow-hidden border-r border-border ${
+          className={`overflow-hidden border-r border-border/60 bg-card/40 transition-all duration-300 ease-out ${
             panelOpen ? 'hidden lg:block lg:w-[420px] lg:shrink-0' : 'hidden'
           } ${activeTab === 'dashboard' ? 'block lg:block flex-1 lg:flex-none border-r-0 lg:border-r' : ''}`}
         >
@@ -34,24 +34,28 @@ export default function AppShell() {
         </main>
       </div>
 
-      {/* Mobile tab bar */}
-      <nav className="h-14 shrink-0 border-t border-border bg-background flex lg:hidden">
+      {/* Mobile tab bar — frosted glass effect */}
+      <nav className="h-14 shrink-0 border-t border-border/60 bg-card/80 backdrop-blur-sm flex lg:hidden">
         <button
           onClick={() => setActiveTab('chat')}
-          className={`flex-1 flex flex-col items-center justify-center gap-0.5 text-xs transition-colors ${
-            activeTab === 'chat' ? 'text-primary' : 'text-muted-foreground'
+          className={`flex-1 flex flex-col items-center justify-center gap-0.5 text-xs font-medium transition-all duration-200 ${
+            activeTab === 'chat'
+              ? 'text-primary'
+              : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          <MessageSquare className="size-5" />
+          <MessageSquare className={`size-5 transition-transform duration-200 ${activeTab === 'chat' ? 'scale-110' : ''}`} />
           Chat
         </button>
         <button
           onClick={() => setActiveTab('dashboard')}
-          className={`flex-1 flex flex-col items-center justify-center gap-0.5 text-xs transition-colors ${
-            activeTab === 'dashboard' ? 'text-primary' : 'text-muted-foreground'
+          className={`flex-1 flex flex-col items-center justify-center gap-0.5 text-xs font-medium transition-all duration-200 ${
+            activeTab === 'dashboard'
+              ? 'text-primary'
+              : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          <LayoutDashboard className="size-5" />
+          <LayoutDashboard className={`size-5 transition-transform duration-200 ${activeTab === 'dashboard' ? 'scale-110' : ''}`} />
           Dashboard
         </button>
       </nav>

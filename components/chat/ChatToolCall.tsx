@@ -33,8 +33,8 @@ export default function ChatToolCall({ part }: { part: ToolPart }) {
       <ToolContent>
         <ToolInput input={part.input} />
         {hasOutput ? (
-          <div className="space-y-2">
-            <h4 className="font-medium text-muted-foreground text-xs uppercase tracking-wide">Result</h4>
+          <div className="space-y-2 pt-1">
+            <h4 className="font-medium text-muted-foreground text-[11px] uppercase tracking-wider">Result</h4>
             <ToolResultRenderer toolName={toolName} output={part.output} />
           </div>
         ) : (

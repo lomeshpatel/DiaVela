@@ -43,15 +43,15 @@ function isNutritionOutput(v: unknown): v is NutritionOutput {
 export default function ToolResultRenderer({ toolName, output }: { toolName: string; output: unknown }) {
   if (toolName === 'get_glucose_trends' && isGlucoseTrends(output)) {
     return (
-      <div className="space-y-2">
+      <div className="space-y-3">
         <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="bg-muted/50 rounded p-2">
-            <span className="text-muted-foreground">Average:</span>{' '}
-            <span className="font-medium">{output.stats.average} mg/dL</span>
+          <div className="bg-teal-light/50 rounded-lg p-2.5 border border-teal/10">
+            <span className="text-muted-foreground block text-[11px] uppercase tracking-wider mb-0.5">Average</span>
+            <span className="font-bold text-foreground tabular-nums">{output.stats.average} mg/dL</span>
           </div>
-          <div className="bg-muted/50 rounded p-2">
-            <span className="text-muted-foreground">In Range:</span>{' '}
-            <span className="font-medium">{output.stats.inRangePercent}%</span>
+          <div className="bg-teal-light/50 rounded-lg p-2.5 border border-teal/10">
+            <span className="text-muted-foreground block text-[11px] uppercase tracking-wider mb-0.5">In Range</span>
+            <span className="font-bold text-foreground tabular-nums">{output.stats.inRangePercent}%</span>
           </div>
         </div>
         <GlucoseChart readings={output.readings} />
@@ -65,11 +65,11 @@ export default function ToolResultRenderer({ toolName, output }: { toolName: str
 
   if (toolName === 'search_nutrition' && isNutritionOutput(output)) {
     return (
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         {output.foods.map((food, i) => (
-          <div key={i} className="bg-muted/50 rounded p-2 text-xs">
-            <p className="font-medium">{food.description}</p>
-            <p className="text-muted-foreground">
+          <div key={i} className="bg-amber-light/40 rounded-lg p-2.5 border border-amber/10 text-xs">
+            <p className="font-semibold text-foreground text-[13px]">{food.description}</p>
+            <p className="text-muted-foreground mt-1">
               {food.calories} cal | {food.carbs_g}g carbs | {food.protein_g}g protein | {food.fat_g}g fat | {food.fiber_g}g fiber | {food.sugar_g}g sugar
             </p>
           </div>
@@ -84,7 +84,7 @@ export default function ToolResultRenderer({ toolName, output }: { toolName: str
   }
 
   if (typeof output === 'object' && output !== null) {
-    return <pre className="text-xs bg-muted/50 rounded p-2 overflow-x-auto">{JSON.stringify(output, null, 2)}</pre>;
+    return <pre className="text-xs bg-muted/50 rounded-lg p-3 overflow-x-auto text-muted-foreground">{JSON.stringify(output, null, 2)}</pre>;
   }
 
   return null;

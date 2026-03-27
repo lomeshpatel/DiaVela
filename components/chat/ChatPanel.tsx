@@ -1,10 +1,9 @@
 'use client';
 
-import { useCallback, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport, isToolOrDynamicToolUIPart } from 'ai';
-import type { UIMessage } from 'ai';
-import { HeartPulse } from 'lucide-react';
+import { HeartPulse, Activity, Utensils, BookOpen } from 'lucide-react';
 import {
   Conversation,
   ConversationContent,
@@ -70,11 +69,27 @@ export default function ChatPanel() {
       <Conversation className="flex-1">
         <ConversationContent>
           {messages.length === 0 ? (
-            <ConversationEmptyState
-              icon={<HeartPulse className="size-12" />}
-              title="Welcome to DiaVela"
-              description="I can help you track glucose, look up nutrition, manage medications, and answer diabetes questions."
-            />
+            <ConversationEmptyState>
+              <div className="flex flex-col items-center gap-4 animate-scale-in">
+                <div className="relative">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-teal-light to-amber-light flex items-center justify-center">
+                    <HeartPulse className="size-10 text-primary" />
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg bg-amber flex items-center justify-center shadow-sm">
+                    <Activity className="size-3.5 text-white" />
+                  </div>
+                </div>
+                <div className="text-center">
+                  <h2 className="font-display font-bold text-xl tracking-tight text-foreground">
+                    Welcome to DiaVela
+                  </h2>
+                  <p className="text-muted-foreground text-sm leading-relaxed mt-1.5 max-w-xs">
+                    Your AI-powered diabetes care assistant. Track glucose, look up nutrition,
+                    manage medications, and get evidence-based answers.
+                  </p>
+                </div>
+              </div>
+            </ConversationEmptyState>
           ) : (
             messages.map(message => (
               <ChatMessage key={message.id} message={message} />
@@ -85,7 +100,15 @@ export default function ChatPanel() {
       </Conversation>
 
       {messages.length === 0 && (
-        <div className="px-4 pb-2">
+        <div className="px-4 pb-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <div className="flex items-center gap-2 mb-2.5">
+            <div className="flex gap-1.5 text-muted-foreground">
+              <Activity className="size-3.5" />
+              <Utensils className="size-3.5" />
+              <BookOpen className="size-3.5" />
+            </div>
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Try asking</span>
+          </div>
           <Suggestions>
             {SUGGESTED_PROMPTS.map(prompt => (
               <Suggestion key={prompt} suggestion={prompt} onClick={handleSuggestion} />
@@ -100,8 +123,8 @@ export default function ChatPanel() {
             <PromptInputTextarea placeholder="Ask about glucose levels, nutrition, medications..." />
           </PromptInputBody>
           <PromptInputFooter>
-            <span className="text-xs text-muted-foreground">
-              DiaVela provides educational info only
+            <span className="text-[11px] text-muted-foreground/70 tracking-wide">
+              Educational information only — not medical advice
             </span>
             <PromptInputSubmit status={status} onStop={stop} />
           </PromptInputFooter>

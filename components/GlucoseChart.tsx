@@ -9,8 +9,8 @@ import {
   Tooltip,
   ReferenceLine,
   ResponsiveContainer,
-  Legend,
 } from 'recharts';
+import { Activity } from 'lucide-react';
 
 interface GlucoseReading {
   id: number;
@@ -28,11 +28,22 @@ function formatTimestamp(ts: string): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
+/* Semantic health colors using OKLCH-aligned hex equivalents */
+const COLORS = {
+  sage: '#5a9a6e',       /* in-range green */
+  amber: '#c88a2e',      /* slightly high */
+  rose: '#c75050',        /* out of range */
+  teal: '#2e8a8a',        /* primary line */
+  tealLight: '#d9f0ef',   /* grid/area */
+  muted: '#94908a',       /* axis text */
+  gridStroke: '#eae6e0',  /* warm grid */
+};
+
 function getColor(value: number): string {
-  if (value < 70) return '#ef4444';   // red - low
-  if (value <= 140) return '#22c55e'; // green - normal
-  if (value <= 180) return '#f59e0b'; // yellow - slightly high
-  return '#ef4444';                   // red - high
+  if (value < 70) return COLORS.rose;
+  if (value <= 140) return COLORS.sage;
+  if (value <= 180) return COLORS.amber;
+  return COLORS.rose;
 }
 
 interface CustomDotProps {
@@ -47,7 +58,7 @@ function CustomDot({ cx, cy, value }: CustomDotProps) {
     <circle
       cx={cx}
       cy={cy}
-      r={5}
+      r={4}
       fill={getColor(value)}
       stroke="white"
       strokeWidth={2}
@@ -67,17 +78,17 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
   const data = entry.payload;
 
   let status = 'Normal';
-  let statusColor = 'text-green-600';
-  if (value < 70) { status = 'Low'; statusColor = 'text-red-600'; }
-  else if (value > 180) { status = 'High'; statusColor = 'text-red-600'; }
-  else if (value > 140) { status = 'Slightly High'; statusColor = 'text-yellow-600'; }
+  let statusColor = COLORS.sage;
+  if (value < 70) { status = 'Low'; statusColor = COLORS.rose; }
+  else if (value > 180) { status = 'High'; statusColor = COLORS.rose; }
+  else if (value > 140) { status = 'Slightly High'; statusColor = COLORS.amber; }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-lg text-sm">
-      <p className="font-semibold text-gray-800">{value} mg/dL</p>
-      <p className={`font-medium ${statusColor}`}>{status}</p>
-      <p className="text-gray-500">{data.formattedTime}</p>
-      {data.notes && <p className="text-gray-600 mt-1 italic">"{data.notes}"</p>}
+    <div className="bg-card border border-border rounded-xl p-3 shadow-lg text-sm">
+      <p className="font-bold text-foreground text-base tabular-nums">{value} <span className="text-xs font-normal text-muted-foreground">mg/dL</span></p>
+      <p className="font-medium text-xs mt-0.5" style={{ color: statusColor }}>{status}</p>
+      <p className="text-muted-foreground text-xs mt-1">{data.formattedTime}</p>
+      {data.notes && <p className="text-muted-foreground text-xs mt-1 italic">&ldquo;{data.notes}&rdquo;</p>}
     </div>
   );
 }
@@ -85,11 +96,13 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
 export default function GlucoseChart({ readings }: Props) {
   if (readings.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-56 text-muted-foreground">
         <div className="text-center">
-          <div className="text-4xl mb-2">📊</div>
-          <p>No glucose readings yet</p>
-          <p className="text-sm">Ask DiaVela to log your first reading</p>
+          <div className="w-12 h-12 rounded-xl bg-teal-light mx-auto mb-3 flex items-center justify-center">
+            <Activity className="size-6 text-primary" />
+          </div>
+          <p className="text-sm font-medium">No glucose readings yet</p>
+          <p className="text-xs text-muted-foreground/70 mt-1">Ask DiaVela to log your first reading</p>
         </div>
       </div>
     );
@@ -104,46 +117,55 @@ export default function GlucoseChart({ readings }: Props) {
     }));
 
   return (
-    <div className="w-full h-72">
+    <div className="w-full h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+        <LineChart data={chartData} margin={{ top: 8, right: 16, left: -8, bottom: 8 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke={COLORS.gridStroke} />
           <XAxis
             dataKey="formattedTime"
-            tick={{ fontSize: 11, fill: '#6b7280' }}
+            tick={{ fontSize: 10, fill: COLORS.muted }}
             interval="preserveStartEnd"
+            axisLine={{ stroke: COLORS.gridStroke }}
+            tickLine={false}
           />
           <YAxis
             domain={[40, 350]}
-            tick={{ fontSize: 11, fill: '#6b7280' }}
+            tick={{ fontSize: 10, fill: COLORS.muted }}
             tickFormatter={(v) => `${v}`}
-            label={{ value: 'mg/dL', angle: -90, position: 'insideLeft', offset: 10, style: { fontSize: 11, fill: '#6b7280' } }}
+            axisLine={false}
+            tickLine={false}
           />
           <Tooltip content={<CustomTooltip />} />
 
-          {/* Target range shading via reference lines */}
-          <ReferenceLine y={70} stroke="#ef4444" strokeDasharray="4 4" strokeWidth={1.5} label={{ value: '70', position: 'left', fontSize: 10, fill: '#ef4444' }} />
-          <ReferenceLine y={140} stroke="#22c55e" strokeDasharray="4 4" strokeWidth={1.5} label={{ value: '140', position: 'left', fontSize: 10, fill: '#22c55e' }} />
-          <ReferenceLine y={180} stroke="#f59e0b" strokeDasharray="4 4" strokeWidth={1.5} label={{ value: '180', position: 'left', fontSize: 10, fill: '#f59e0b' }} />
+          <ReferenceLine y={70} stroke={COLORS.rose} strokeDasharray="6 3" strokeWidth={1} strokeOpacity={0.5} />
+          <ReferenceLine y={140} stroke={COLORS.sage} strokeDasharray="6 3" strokeWidth={1} strokeOpacity={0.5} />
+          <ReferenceLine y={180} stroke={COLORS.amber} strokeDasharray="6 3" strokeWidth={1} strokeOpacity={0.5} />
 
           <Line
             type="monotone"
             dataKey="value"
-            stroke="#6366f1"
-            strokeWidth={2}
+            stroke={COLORS.teal}
+            strokeWidth={2.5}
             dot={<CustomDot />}
-            activeDot={{ r: 7 }}
-            name="Glucose (mg/dL)"
+            activeDot={{ r: 6, stroke: COLORS.teal, strokeWidth: 2, fill: 'white' }}
           />
-          <Legend />
         </LineChart>
       </ResponsiveContainer>
 
       {/* Color legend */}
-      <div className="flex gap-4 mt-2 text-xs text-gray-500 justify-center">
-        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-green-500 inline-block" /> 70–140 (Target)</span>
-        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-yellow-500 inline-block" /> 140–180 (Slightly High)</span>
-        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-red-500 inline-block" /> &lt;70 or &gt;180 (Out of Range)</span>
+      <div className="flex gap-4 mt-1 text-[11px] text-muted-foreground justify-center">
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ backgroundColor: COLORS.sage }} />
+          70–140 Target
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ backgroundColor: COLORS.amber }} />
+          140–180 High
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ backgroundColor: COLORS.rose }} />
+          Out of Range
+        </span>
       </div>
     </div>
   );

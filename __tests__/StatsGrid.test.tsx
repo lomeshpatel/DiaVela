@@ -49,8 +49,8 @@ describe('StatsGrid', () => {
 
     render(<StatsGrid stats={stats} />);
 
-    // The average and max should have red text
+    // The average and max should have out-of-range color
     const avgElement = screen.getAllByText('200')[0].closest('p');
-    expect(avgElement?.className).toContain('text-red-600');
+    expect(avgElement?.className).toContain('text-rose-accent');
   });
 });
