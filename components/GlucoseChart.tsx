@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { Activity } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 interface GlucoseReading {
   id: number;
@@ -28,71 +29,78 @@ function formatTimestamp(ts: string): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
-/* Vivid health colors */
-const COLORS = {
-  sage: '#2ea86b',       /* in-range green — vivid */
-  amber: '#d4920a',      /* slightly high — vivid amber */
-  rose: '#d44040',        /* out of range — vivid rose */
-  teal: '#0f8a8a',        /* primary line — vivid teal */
-  muted: '#888580',       /* axis text */
-  gridStroke: '#e8e4dc',  /* warm grid */
+/* Vivid health colors — theme-aware */
+const LIGHT_COLORS = {
+  sage: '#2ea86b',
+  amber: '#d4920a',
+  rose: '#d44040',
+  teal: '#0f8a8a',
+  muted: '#888580',
+  gridStroke: '#e8e4dc',
+  dotStroke: 'white',
 };
 
-function getColor(value: number): string {
-  if (value < 70) return COLORS.rose;
-  if (value <= 140) return COLORS.sage;
-  if (value <= 180) return COLORS.amber;
-  return COLORS.rose;
-}
-
-interface CustomDotProps {
-  cx?: number;
-  cy?: number;
-  value?: number;
-}
-
-function CustomDot({ cx, cy, value }: CustomDotProps) {
-  if (cx === undefined || cy === undefined || value === undefined) return null;
-  return (
-    <circle
-      cx={cx}
-      cy={cy}
-      r={4.5}
-      fill={getColor(value)}
-      stroke="white"
-      strokeWidth={2}
-    />
-  );
-}
-
-interface TooltipPayload {
-  value: number;
-  payload: GlucoseReading & { formattedTime: string };
-}
-
-function CustomTooltip({ active, payload }: { active?: boolean; payload?: TooltipPayload[] }) {
-  if (!active || !payload?.length) return null;
-  const entry = payload[0];
-  const value = entry.value;
-  const data = entry.payload;
-
-  let status = 'Normal';
-  let statusColor = COLORS.sage;
-  if (value < 70) { status = 'Low'; statusColor = COLORS.rose; }
-  else if (value > 180) { status = 'High'; statusColor = COLORS.rose; }
-  else if (value > 140) { status = 'Slightly High'; statusColor = COLORS.amber; }
-
-  return (
-    <div className="bg-card border border-border rounded-xl p-3 shadow-xl text-sm backdrop-blur-sm">
-      <p className="font-bold text-foreground text-lg tabular-nums">{value} <span className="text-xs font-normal text-muted-foreground">mg/dL</span></p>
-      <p className="font-semibold text-xs mt-0.5" style={{ color: statusColor }}>{status}</p>
-      <p className="text-muted-foreground text-xs mt-1">{data.formattedTime}</p>
-      {data.notes && <p className="text-muted-foreground text-xs mt-1 italic">&ldquo;{data.notes}&rdquo;</p>}
-    </div>
-  );
-}
+const DARK_COLORS = {
+  sage: '#2ea86b',
+  amber: '#d4920a',
+  rose: '#d44040',
+  teal: '#3db8b8',
+  muted: '#6b7a9a',
+  gridStroke: '#2a3547',
+  dotStroke: '#1a2235',
+};
 
 export default function GlucoseChart({ readings }: Props) {
+  const { resolvedTheme } = useTheme();
+  const COLORS = resolvedTheme === 'dark' ? DARK_COLORS : LIGHT_COLORS;
+
+  function getColor(value: number): string {
+    if (value < 70) return COLORS.rose;
+    if (value <= 140) return COLORS.sage;
+    if (value <= 180) return COLORS.amber;
+    return COLORS.rose;
+  }
+
+  interface CustomDotProps {
+    cx?: number;
+    cy?: number;
+    value?: number;
+  }
+
+  function CustomDot({ cx, cy, value }: CustomDotProps) {
+    if (cx === undefined || cy === undefined || value === undefined) return null;
+    return (
+      <circle cx={cx} cy={cy} r={4.5} fill={getColor(value)} stroke={COLORS.dotStroke} strokeWidth={2} />
+    );
+  }
+
+  interface TooltipPayload {
+    value: number;
+    payload: GlucoseReading & { formattedTime: string };
+  }
+
+  function CustomTooltip({ active, payload }: { active?: boolean; payload?: TooltipPayload[] }) {
+    if (!active || !payload?.length) return null;
+    const entry = payload[0];
+    const value = entry.value;
+    const data = entry.payload;
+
+    let status = 'Normal';
+    let statusColor = COLORS.sage;
+    if (value < 70) { status = 'Low'; statusColor = COLORS.rose; }
+    else if (value > 180) { status = 'High'; statusColor = COLORS.rose; }
+    else if (value > 140) { status = 'Slightly High'; statusColor = COLORS.amber; }
+
+    return (
+      <div className="bg-card border border-border rounded-xl p-3 shadow-xl text-sm backdrop-blur-sm">
+        <p className="font-bold text-foreground text-lg tabular-nums">{value} <span className="text-xs font-normal text-muted-foreground">mg/dL</span></p>
+        <p className="font-semibold text-xs mt-0.5" style={{ color: statusColor }}>{status}</p>
+        <p className="text-muted-foreground text-xs mt-1">{data.formattedTime}</p>
+        {data.notes && <p className="text-muted-foreground text-xs mt-1 italic">&ldquo;{data.notes}&rdquo;</p>}
+      </div>
+    );
+  }
+
   if (readings.length === 0) {
     return (
       <div className="flex items-center justify-center h-56 text-muted-foreground">
@@ -146,7 +154,7 @@ export default function GlucoseChart({ readings }: Props) {
             stroke={COLORS.teal}
             strokeWidth={2.5}
             dot={<CustomDot />}
-            activeDot={{ r: 7, stroke: COLORS.teal, strokeWidth: 2, fill: 'white' }}
+            activeDot={{ r: 7, stroke: COLORS.teal, strokeWidth: 2, fill: COLORS.dotStroke }}
           />
         </LineChart>
       </ResponsiveContainer>

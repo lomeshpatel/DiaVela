@@ -30,14 +30,19 @@ export const logGlucoseReadingTool = tool({
     notes: z.string().optional().describe('Optional notes (e.g., "after lunch", "fasting", "before exercise")'),
   })),
   execute: async (input) => {
-    const reading = insertGlucoseReading(input.value_mgdl, input.notes);
-    const status = getGlucoseStatus(input.value_mgdl);
-    return {
-      success: true,
-      reading,
-      status,
-      message: `Logged glucose reading: ${input.value_mgdl} mg/dL (${status})`,
-    };
+    try {
+      const reading = insertGlucoseReading(input.value_mgdl, input.notes);
+      const status = getGlucoseStatus(input.value_mgdl);
+      return {
+        success: true,
+        reading,
+        status,
+        message: `Logged glucose reading: ${input.value_mgdl} mg/dL (${status})`,
+      };
+    } catch (err) {
+      console.error('[glucoseTools] insertGlucoseReading failed:', err);
+      return { success: false, reading: null, error: 'Failed to save the glucose reading. Please try again.' };
+    }
   },
 });
 

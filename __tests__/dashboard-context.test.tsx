@@ -120,4 +120,90 @@ describe('DashboardContext', () => {
       renderHook(() => useDashboard());
     }).toThrow('useDashboard must be used within a DashboardProvider');
   });
+
+  it('exposes error when glucose API returns non-OK', async () => {
+    global.fetch = vi.fn((url: string | URL | Request) => {
+      const urlStr = typeof url === 'string' ? url : url.toString();
+      if (urlStr.includes('/api/glucose')) {
+        return Promise.resolve({ ok: false, status: 500 } as Response);
+      }
+      return Promise.resolve(mockResponse({ medications: mockMedications }));
+    }) as unknown as typeof fetch;
+
+    const { result } = renderHook(() => useDashboard(), { wrapper });
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.error).toMatch(/500/);
+    expect(result.current.readings).toEqual([]);
+  });
+
+  it('exposes error on network failure', async () => {
+    global.fetch = vi.fn(() => Promise.reject(new Error('Network offline'))) as unknown as typeof fetch;
+
+    const { result } = renderHook(() => useDashboard(), { wrapper });
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.error).toBeTruthy();
+    expect(result.current.readings).toEqual([]);
+  });
+
+  it('clears error on successful refetch', async () => {
+    // First fetch fails
+    global.fetch = vi.fn(() => Promise.reject(new Error('Network offline'))) as unknown as typeof fetch;
+    const { result } = renderHook(() => useDashboard(), { wrapper });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.error).toBeTruthy();
+
+    // Second fetch succeeds
+    global.fetch = vi.fn((url: string | URL | Request) => {
+      const urlStr = typeof url === 'string' ? url : url.toString();
+      if (urlStr.includes('/api/glucose')) return Promise.resolve(mockResponse({ readings: mockReadings }));
+      return Promise.resolve(mockResponse({ medications: mockMedications }));
+    }) as unknown as typeof fetch;
+
+    act(() => { result.current.refresh(); });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.error).toBeNull();
+  });
+
+  it('classifies exact boundary 70 mg/dL as in-range', async () => {
+    global.fetch = vi.fn((url: string | URL | Request) => {
+      const urlStr = typeof url === 'string' ? url : url.toString();
+      if (urlStr.includes('/api/glucose')) {
+        return Promise.resolve(mockResponse({ readings: [
+          { id: 1, value_mgdl: 70, timestamp: '2024-01-01T12:00:00', notes: null },
+          { id: 2, value_mgdl: 69, timestamp: '2024-01-01T08:00:00', notes: null },
+        ] }));
+      }
+      return Promise.resolve(mockResponse({ medications: [] }));
+    }) as unknown as typeof fetch;
+
+    const { result } = renderHook(() => useDashboard(), { wrapper });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    // 70 is in-range, 69 is not — 50%
+    expect(result.current.stats.inRangePercent).toBe(50);
+  });
+
+  it('classifies exact boundary 180 mg/dL as in-range', async () => {
+    global.fetch = vi.fn((url: string | URL | Request) => {
+      const urlStr = typeof url === 'string' ? url : url.toString();
+      if (urlStr.includes('/api/glucose')) {
+        return Promise.resolve(mockResponse({ readings: [
+          { id: 1, value_mgdl: 180, timestamp: '2024-01-01T12:00:00', notes: null },
+          { id: 2, value_mgdl: 181, timestamp: '2024-01-01T08:00:00', notes: null },
+        ] }));
+      }
+      return Promise.resolve(mockResponse({ medications: [] }));
+    }) as unknown as typeof fetch;
+
+    const { result } = renderHook(() => useDashboard(), { wrapper });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    // 180 is in-range, 181 is not — 50%
+    expect(result.current.stats.inRangePercent).toBe(50);
+  });
 });

@@ -47,6 +47,7 @@ interface DashboardContextValue {
   medications: Medication[];
   stats: Stats;
   loading: boolean;
+  error: string | null;
   days: number;
   setDays: (days: number) => void;
   refresh: () => void;
@@ -58,23 +59,26 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [readings, setReadings] = useState<GlucoseReading[]>([]);
   const [medications, setMedications] = useState<Medication[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [days, setDays] = useState(7);
 
   const fetchData = useCallback(async (daysToFetch: number) => {
     setLoading(true);
+    setError(null);
     try {
       const [glucoseRes, medsRes] = await Promise.all([
         fetch(`/api/glucose?days=${daysToFetch}`),
         fetch('/api/medications'),
       ]);
-      if (!glucoseRes.ok) throw new Error(`Glucose API error: ${glucoseRes.status}`);
-      if (!medsRes.ok) throw new Error(`Medications API error: ${medsRes.status}`);
+      if (!glucoseRes.ok) throw new Error(`Failed to load glucose data (HTTP ${glucoseRes.status})`);
+      if (!medsRes.ok) throw new Error(`Failed to load medication data (HTTP ${medsRes.status})`);
       const glucoseData = await glucoseRes.json();
       const medsData = await medsRes.json();
       setReadings(glucoseData.readings || []);
       setMedications(medsData.medications || []);
     } catch (err) {
-      console.error('Failed to fetch dashboard data:', err);
+      console.error('[dashboard-context] fetchData failed:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load dashboard data. Please try refreshing.');
     } finally {
       setLoading(false);
     }
@@ -91,7 +95,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const stats = computeStats(readings);
 
   return (
-    <DashboardContext.Provider value={{ readings, medications, stats, loading, days, setDays, refresh }}>
+    <DashboardContext.Provider value={{ readings, medications, stats, loading, error, days, setDays, refresh }}>
       {children}
     </DashboardContext.Provider>
   );

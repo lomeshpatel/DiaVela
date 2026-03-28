@@ -24,9 +24,14 @@ export function loadVectorStore(): VectorStore {
     return { entries: [], createdAt: new Date().toISOString() };
   }
 
-  const raw = fs.readFileSync(VECTORS_PATH, 'utf-8');
-  cachedStore = JSON.parse(raw) as VectorStore;
-  return cachedStore;
+  try {
+    const raw = fs.readFileSync(VECTORS_PATH, 'utf-8');
+    cachedStore = JSON.parse(raw) as VectorStore;
+    return cachedStore;
+  } catch (err) {
+    console.error('[vectorStore] Failed to load vectors.json — knowledge base unavailable:', err);
+    return { entries: [], createdAt: new Date().toISOString() };
+  }
 }
 
 export function saveVectorStore(store: VectorStore): void {

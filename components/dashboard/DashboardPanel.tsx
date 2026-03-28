@@ -4,7 +4,7 @@ import { useDashboard } from '@/lib/dashboard-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { TrendingUp, Pill } from 'lucide-react';
+import { TrendingUp, Pill, AlertCircle } from 'lucide-react';
 import GlucoseChart from '@/components/GlucoseChart';
 import MedicationCard from '@/components/MedicationCard';
 import StatsGrid from '@/components/dashboard/StatsGrid';
@@ -68,7 +68,7 @@ function LoadingPulse() {
 }
 
 export default function DashboardPanel() {
-  const { readings, medications, stats, loading, days, setDays } = useDashboard();
+  const { readings, medications, stats, loading, error, days, setDays } = useDashboard();
 
   return (
     <ScrollArea className="h-full">
@@ -92,6 +92,13 @@ export default function DashboardPanel() {
             ))}
           </div>
         </div>
+
+        {error && (
+          <div className="flex items-center gap-2.5 rounded-xl border border-rose-accent/20 bg-rose-bg/40 px-3.5 py-3 text-sm text-rose-accent animate-fade-in">
+            <AlertCircle className="size-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
 
         {loading ? (
           <LoadingPulse />

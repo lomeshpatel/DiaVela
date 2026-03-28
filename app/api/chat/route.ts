@@ -42,22 +42,32 @@ function getModel() {
 }
 
 export async function POST(req: Request) {
-  const { messages }: { messages: UIMessage[] } = await req.json();
+  let messages: UIMessage[];
+  try {
+    ({ messages } = await req.json());
+  } catch {
+    return Response.json({ error: 'Invalid request body — expected JSON with a messages array.' }, { status: 400 });
+  }
 
-  const result = streamText({
-    model: getModel(),
-    system: SYSTEM_PROMPT,
-    messages: await convertToModelMessages(messages),
-    tools: {
-      log_glucose_reading: logGlucoseReadingTool,
-      get_glucose_trends: getGlucoseTrendsTool,
-      search_nutrition: searchNutritionTool,
-      add_medication_reminder: addMedicationReminderTool,
-      list_medications: listMedicationsTool,
-      search_diabetes_knowledge: searchDiabetesKnowledgeTool,
-    },
-    stopWhen: stepCountIs(10),
-  });
-
-  return result.toUIMessageStreamResponse();
+  try {
+    const result = streamText({
+      model: getModel(),
+      system: SYSTEM_PROMPT,
+      messages: await convertToModelMessages(messages),
+      tools: {
+        log_glucose_reading: logGlucoseReadingTool,
+        get_glucose_trends: getGlucoseTrendsTool,
+        search_nutrition: searchNutritionTool,
+        add_medication_reminder: addMedicationReminderTool,
+        list_medications: listMedicationsTool,
+        search_diabetes_knowledge: searchDiabetesKnowledgeTool,
+      },
+      stopWhen: stepCountIs(10),
+    });
+    return result.toUIMessageStreamResponse();
+  } catch (err) {
+    console.error('[chat/route] Failed to initialize AI response:', err);
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    return Response.json({ error: `Failed to start AI response: ${message}` }, { status: 500 });
+  }
 }

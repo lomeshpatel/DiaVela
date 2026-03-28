@@ -1,9 +1,9 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport, isToolOrDynamicToolUIPart } from 'ai';
-import { HeartPulse, Activity, Utensils, BookOpen, Sparkles } from 'lucide-react';
+import { HeartPulse, Activity, Utensils, BookOpen, Sparkles, AlertCircle, X } from 'lucide-react';
 import {
   Conversation,
   ConversationContent,
@@ -37,6 +37,7 @@ const SUGGESTED_PROMPTS = [
 
 export default function ChatPanel() {
   const dashboard = useDashboard();
+  const [chatError, setChatError] = useState<string | null>(null);
 
   // Use a ref to avoid stale closure in onFinish capturing an old refresh
   const refreshRef = useRef(dashboard.refresh);
@@ -44,7 +45,12 @@ export default function ChatPanel() {
 
   const { messages, sendMessage, status, stop } = useChat({
     transport,
+    onError: (err) => {
+      console.error('[ChatPanel] useChat error:', err);
+      setChatError('Something went wrong. Please try again.');
+    },
     onFinish: (result) => {
+      setChatError(null);
       const parts = result.message.parts ?? [];
       const hasMutation = parts.some(p => {
         if (!isToolOrDynamicToolUIPart(p)) return false;
@@ -115,6 +121,16 @@ export default function ChatPanel() {
               <Suggestion key={prompt} suggestion={prompt} onClick={handleSuggestion} />
             ))}
           </Suggestions>
+        </div>
+      )}
+
+      {chatError && (
+        <div className="mx-4 mb-2 flex items-center gap-2 rounded-lg border border-rose-accent/20 bg-rose-bg/40 px-3 py-2 text-xs text-rose-accent animate-fade-in">
+          <AlertCircle className="size-3.5 shrink-0" />
+          <span className="flex-1">{chatError}</span>
+          <button onClick={() => setChatError(null)} className="shrink-0 opacity-60 hover:opacity-100">
+            <X className="size-3.5" />
+          </button>
         </div>
       )}
 

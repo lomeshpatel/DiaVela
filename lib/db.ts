@@ -48,7 +48,9 @@ export function insertGlucoseReading(value_mgdl: number, notes?: string): Glucos
     INSERT INTO glucose_readings (value_mgdl, notes) VALUES (?, ?)
   `);
   const result = stmt.run(value_mgdl, notes ?? null);
-  return getGlucoseReadingById(result.lastInsertRowid as number)!;
+  const reading = getGlucoseReadingById(result.lastInsertRowid as number);
+  if (!reading) throw new Error(`insertGlucoseReading: failed to read back row id=${result.lastInsertRowid}`);
+  return reading;
 }
 
 export function getGlucoseReadingById(id: number): GlucoseReading | null {
@@ -83,7 +85,9 @@ export function insertMedication(name: string, dose: string, schedule_time: stri
     INSERT INTO medications (name, dose, schedule_time, notes) VALUES (?, ?, ?, ?)
   `);
   const result = stmt.run(name, dose, schedule_time, notes ?? null);
-  return getMedicationById(result.lastInsertRowid as number)!;
+  const medication = getMedicationById(result.lastInsertRowid as number);
+  if (!medication) throw new Error(`insertMedication: failed to read back row id=${result.lastInsertRowid}`);
+  return medication;
 }
 
 export function getMedicationById(id: number): Medication | null {
