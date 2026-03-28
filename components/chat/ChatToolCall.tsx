@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Tool, ToolHeader, ToolContent, ToolInput, ToolOutput } from '@/components/ai-elements/tool';
 import ToolResultRenderer from '@/components/chat/ToolResultRenderer';
 import type { ToolUIPart, DynamicToolUIPart } from 'ai';
@@ -23,12 +24,14 @@ export default function ChatToolCall({ part }: { part: ToolPart }) {
   const title = TOOL_LABELS[toolName] ?? toolName;
   const hasOutput = part.state === 'output-available' && part.output != null;
 
+  const [open, setOpen] = useState(false);
+
   const headerProps = isDynamic
     ? { type: 'dynamic-tool' as const, state: part.state as DynamicToolUIPart['state'], toolName: (part as DynamicToolUIPart).toolName, title }
     : { type: part.type as ToolUIPart['type'], state: part.state as ToolUIPart['state'], title };
 
   return (
-    <Tool defaultOpen={hasOutput}>
+    <Tool open={open} onOpenChange={setOpen}>
       <ToolHeader {...headerProps} />
       <ToolContent>
         <ToolInput input={part.input} />
