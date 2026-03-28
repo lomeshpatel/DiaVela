@@ -36,6 +36,17 @@ yarn-error.log*
 # vercel
 .vercel
 
+# claude code
+.claude/
+
+# sqlite runtime files
+/data/diavela.db
+/data/diavela.db-shm
+/data/diavela.db-wal
+
+# generated embeddings (rebuild with: pnpm ingest)
+/data/vectors.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
