@@ -1,7 +1,8 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Pill, Syringe } from 'lucide-react';
 
 interface Medication {
   id: number;
@@ -16,52 +17,56 @@ interface Props {
   medications: Medication[];
 }
 
-function getMedicationIcon(name: string): string {
+function isInjectable(name: string): boolean {
   const lower = name.toLowerCase();
-  if (lower.includes('insulin')) return '💉';
-  if (lower.includes('metformin')) return '💊';
-  if (lower.includes('jardiance') || lower.includes('empagliflozin')) return '💊';
-  if (lower.includes('ozempic') || lower.includes('semaglutide')) return '💉';
-  return '💊';
+  return lower.includes('insulin') || lower.includes('ozempic') || lower.includes('semaglutide');
 }
 
 export default function MedicationCard({ medications }: Props) {
   if (medications.length === 0) {
     return (
-      <Card className="bg-gray-50 border-dashed">
-        <CardContent className="flex items-center justify-center h-32 text-gray-400">
-          <div className="text-center">
-            <div className="text-3xl mb-1">💊</div>
-            <p className="text-sm">No medications added yet</p>
+      <div className="flex items-center justify-center h-28 text-muted-foreground">
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-2xl bg-amber-bg mx-auto mb-2 flex items-center justify-center border border-amber/20">
+            <Pill className="size-6 text-amber" />
           </div>
-        </CardContent>
-      </Card>
+          <p className="text-sm font-semibold text-foreground">No medications added</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Ask DiaVela to add a reminder</p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="space-y-3">
-      {medications.map((med) => (
-        <Card key={med.id} className="border-l-4 border-l-indigo-400">
-          <CardContent className="py-3 px-4">
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex items-start gap-2">
-                <span className="text-xl">{getMedicationIcon(med.name)}</span>
-                <div>
-                  <p className="font-semibold text-gray-800">{med.name}</p>
-                  <p className="text-sm text-gray-600">{med.dose}</p>
-                  {med.notes && (
-                    <p className="text-xs text-gray-500 mt-0.5 italic">{med.notes}</p>
-                  )}
+    <div className="space-y-2">
+      {medications.map((med) => {
+        const injectable = isInjectable(med.name);
+        const Icon = injectable ? Syringe : Pill;
+
+        return (
+          <Card key={med.id} className="border-l-[3px] border-l-amber hover:shadow-md transition-all hover:border-l-amber-vivid">
+            <CardContent className="py-2.5 px-3.5">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-start gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-amber-bg flex items-center justify-center shrink-0 mt-0.5 border border-amber/15">
+                    <Icon className="size-4 text-amber-vivid" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm text-foreground">{med.name}</p>
+                    <p className="text-xs text-muted-foreground">{med.dose}</p>
+                    {med.notes && (
+                      <p className="text-[11px] text-muted-foreground/70 mt-0.5 italic">{med.notes}</p>
+                    )}
+                  </div>
                 </div>
+                <Badge variant="secondary" className="text-[11px] shrink-0 bg-amber-bg text-amber font-semibold border-amber/15">
+                  {med.schedule_time}
+                </Badge>
               </div>
-              <Badge variant="secondary" className="text-xs shrink-0">
-                {med.schedule_time}
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }

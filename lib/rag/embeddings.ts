@@ -15,10 +15,14 @@ async function getEmbeddingPipeline(): Promise<EmbeddingPipeline> {
 }
 
 export async function generateEmbedding(text: string): Promise<number[]> {
-  const pipe = await getEmbeddingPipeline();
-  const output = await pipe([text], { pooling: 'mean', normalize: true });
-  // output[0].data is a Float32Array
-  return Array.from(output[0].data);
+  try {
+    const pipe = await getEmbeddingPipeline();
+    const output = await pipe([text], { pooling: 'mean', normalize: true });
+    return Array.from(output[0].data);
+  } catch (err) {
+    console.error('[embeddings] generateEmbedding failed:', err);
+    throw new Error('Embedding generation failed — knowledge search unavailable.');
+  }
 }
 
 export function cosineSimilarity(a: number[], b: number[]): number {
@@ -47,7 +51,13 @@ export async function searchKnowledgeBase(query: string, topK: number = 3): Prom
     return [];
   }
 
-  const queryEmbedding = await generateEmbedding(query);
+  let queryEmbedding: number[];
+  try {
+    queryEmbedding = await generateEmbedding(query);
+  } catch (err) {
+    console.error('[embeddings] searchKnowledgeBase failed for query:', query, err);
+    return [];
+  }
 
   const scored = store.entries.map((entry: VectorEntry) => ({
     id: entry.id,

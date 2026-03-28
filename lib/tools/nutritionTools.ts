@@ -76,6 +76,7 @@ export const searchNutritionTool = tool({
 
       return { query: input.food_query, foods };
     } catch (error) {
+      console.error('[nutritionTools] USDA API request failed for query:', input.food_query, error);
       return {
         query: input.food_query,
         foods: [],

@@ -11,12 +11,17 @@ export const addMedicationReminderTool = tool({
     notes: z.string().optional().describe('Optional additional notes (e.g., "take with food", "check blood sugar first")'),
   })),
   execute: async (input) => {
-    const medication = insertMedication(input.name, input.dose, input.schedule_time, input.notes);
-    return {
-      success: true,
-      medication,
-      message: `Added reminder: ${input.name} ${input.dose} at ${input.schedule_time}`,
-    };
+    try {
+      const medication = insertMedication(input.name, input.dose, input.schedule_time, input.notes);
+      return {
+        success: true,
+        medication,
+        message: `Added reminder: ${input.name} ${input.dose} at ${input.schedule_time}`,
+      };
+    } catch (err) {
+      console.error('[medicationTools] insertMedication failed:', err);
+      return { success: false, medication: null, error: 'Failed to save the medication reminder. Please try again.' };
+    }
   },
 });
 

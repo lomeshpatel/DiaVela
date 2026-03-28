@@ -1,0 +1,48 @@
+'use client';
+
+import type { GlucoseReading } from '@/lib/dashboard-context';
+
+function getStatusInfo(value: number): { label: string; className: string } {
+  if (value < 70) return { label: 'Low', className: 'bg-rose-bg text-rose-accent border border-rose-accent/20' };
+  if (value <= 140) return { label: 'Normal', className: 'bg-sage-bg text-sage border border-sage/20' };
+  if (value <= 180) return { label: 'Slightly High', className: 'bg-amber-bg text-amber border border-amber/20' };
+  return { label: 'High', className: 'bg-rose-bg text-rose-accent border border-rose-accent/20' };
+}
+
+export default function ReadingsTable({ readings }: { readings: GlucoseReading[] }) {
+  if (readings.length === 0) return null;
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-border">
+            <th className="text-left text-[11px] text-muted-foreground font-semibold uppercase tracking-wider pb-2.5">Time</th>
+            <th className="text-left text-[11px] text-muted-foreground font-semibold uppercase tracking-wider pb-2.5">Value</th>
+            <th className="text-left text-[11px] text-muted-foreground font-semibold uppercase tracking-wider pb-2.5">Status</th>
+            <th className="text-left text-[11px] text-muted-foreground font-semibold uppercase tracking-wider pb-2.5">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {readings.slice(0, 10).map(r => {
+            const status = getStatusInfo(r.value_mgdl);
+            return (
+              <tr key={r.id} className="border-b border-border/40 hover:bg-teal-bg/30 transition-colors">
+                <td className="py-2.5 text-muted-foreground text-[13px]">
+                  {new Date(r.timestamp).toLocaleString()}
+                </td>
+                <td className="py-2.5 font-bold text-foreground tabular-nums">{r.value_mgdl} <span className="text-muted-foreground font-normal text-xs">mg/dL</span></td>
+                <td className="py-2.5">
+                  <span className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold ${status.className}`}>
+                    {status.label}
+                  </span>
+                </td>
+                <td className="py-2.5 text-muted-foreground text-[13px]">{r.notes || '\u2014'}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
