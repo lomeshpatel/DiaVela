@@ -70,16 +70,16 @@ describe('AppShell', () => {
     const dashboardBtn = buttons[1];
 
     // Initially Chat tab is active
-    expect(chatBtn.className).toContain('text-primary');
+    expect(chatBtn.className).toContain('text-teal');
     expect(dashboardBtn.className).toContain('text-muted-foreground');
 
     // Click Dashboard tab
     fireEvent.click(dashboardBtn);
-    expect(dashboardBtn.className).toContain('text-primary');
+    expect(dashboardBtn.className).toContain('text-teal');
     expect(chatBtn.className).toContain('text-muted-foreground');
 
     // Click Chat tab back
     fireEvent.click(chatBtn);
-    expect(chatBtn.className).toContain('text-primary');
+    expect(chatBtn.className).toContain('text-teal');
   });
 });

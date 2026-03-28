@@ -45,13 +45,13 @@ export default function ToolResultRenderer({ toolName, output }: { toolName: str
     return (
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="bg-teal-light/50 rounded-lg p-2.5 border border-teal/10">
-            <span className="text-muted-foreground block text-[11px] uppercase tracking-wider mb-0.5">Average</span>
-            <span className="font-bold text-foreground tabular-nums">{output.stats.average} mg/dL</span>
+          <div className="bg-teal-bg rounded-lg p-2.5 border border-teal/20">
+            <span className="text-muted-foreground block text-[11px] uppercase tracking-wider mb-0.5 font-semibold">Average</span>
+            <span className="font-bold text-teal tabular-nums text-sm">{output.stats.average} mg/dL</span>
           </div>
-          <div className="bg-teal-light/50 rounded-lg p-2.5 border border-teal/10">
-            <span className="text-muted-foreground block text-[11px] uppercase tracking-wider mb-0.5">In Range</span>
-            <span className="font-bold text-foreground tabular-nums">{output.stats.inRangePercent}%</span>
+          <div className="bg-sage-bg rounded-lg p-2.5 border border-sage/20">
+            <span className="text-muted-foreground block text-[11px] uppercase tracking-wider mb-0.5 font-semibold">In Range</span>
+            <span className="font-bold text-sage tabular-nums text-sm">{output.stats.inRangePercent}%</span>
           </div>
         </div>
         <GlucoseChart readings={output.readings} />
@@ -67,11 +67,16 @@ export default function ToolResultRenderer({ toolName, output }: { toolName: str
     return (
       <div className="space-y-1.5">
         {output.foods.map((food, i) => (
-          <div key={i} className="bg-amber-light/40 rounded-lg p-2.5 border border-amber/10 text-xs">
-            <p className="font-semibold text-foreground text-[13px]">{food.description}</p>
-            <p className="text-muted-foreground mt-1">
-              {food.calories} cal | {food.carbs_g}g carbs | {food.protein_g}g protein | {food.fat_g}g fat | {food.fiber_g}g fiber | {food.sugar_g}g sugar
-            </p>
+          <div key={i} className="bg-amber-bg rounded-lg p-3 border border-amber/20 text-xs">
+            <p className="font-bold text-foreground text-[13px]">{food.description}</p>
+            <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1.5 text-muted-foreground">
+              <span><span className="font-semibold text-amber">{food.calories}</span> cal</span>
+              <span><span className="font-semibold text-amber">{food.carbs_g}g</span> carbs</span>
+              <span><span className="font-semibold text-foreground">{food.protein_g}g</span> protein</span>
+              <span><span className="font-semibold text-foreground">{food.fat_g}g</span> fat</span>
+              <span><span className="font-semibold text-foreground">{food.fiber_g}g</span> fiber</span>
+              <span><span className="font-semibold text-foreground">{food.sugar_g}g</span> sugar</span>
+            </div>
           </div>
         ))}
       </div>
@@ -84,7 +89,7 @@ export default function ToolResultRenderer({ toolName, output }: { toolName: str
   }
 
   if (typeof output === 'object' && output !== null) {
-    return <pre className="text-xs bg-muted/50 rounded-lg p-3 overflow-x-auto text-muted-foreground">{JSON.stringify(output, null, 2)}</pre>;
+    return <pre className="text-xs bg-muted/60 rounded-lg p-3 overflow-x-auto text-muted-foreground border border-border">{JSON.stringify(output, null, 2)}</pre>;
   }
 
   return null;

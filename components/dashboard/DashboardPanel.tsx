@@ -13,7 +13,7 @@ import ReadingsTable from '@/components/dashboard/ReadingsTable';
 function TimeInRangeBar({ percent }: { percent: number | null }) {
   if (percent === null) return null;
 
-  const color = percent >= 70
+  const barColor = percent >= 70
     ? 'bg-sage'
     : percent >= 50
       ? 'bg-amber'
@@ -25,24 +25,28 @@ function TimeInRangeBar({ percent }: { percent: number | null }) {
       ? 'text-amber'
       : 'text-rose-accent';
 
+  const bgTint = percent >= 70
+    ? 'bg-sage-bg/50'
+    : percent >= 50
+      ? 'bg-amber-bg/50'
+      : 'bg-rose-bg/50';
+
   return (
-    <Card className="animate-fade-in-up stagger-3 overflow-hidden">
+    <Card className={`animate-fade-in-up stagger-3 overflow-hidden border-0 ${bgTint}`}>
       <CardContent className="pt-4 pb-4">
         <div className="flex items-center justify-between mb-2.5">
-          <p className="text-sm font-medium text-foreground">Time in Range</p>
-          <div className="flex items-baseline gap-1">
-            <p className={`text-xl font-bold font-display ${textColor}`}>{percent}%</p>
-          </div>
+          <p className="text-sm font-semibold text-foreground">Time in Range</p>
+          <p className={`text-xl font-bold font-display ${textColor}`}>{percent}%</p>
         </div>
-        <div className="w-full h-2.5 bg-muted rounded-full overflow-hidden">
+        <div className="w-full h-3 bg-background/60 rounded-full overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-700 ease-out ${color}`}
+            className={`h-full rounded-full transition-all duration-700 ease-out ${barColor}`}
             style={{ width: `${percent}%` }}
           />
         </div>
         <div className="flex items-center justify-between mt-2">
-          <p className="text-[11px] text-muted-foreground">70–180 mg/dL</p>
-          <p className="text-[11px] text-muted-foreground">ADA target: ≥70%</p>
+          <p className="text-[11px] text-muted-foreground">70\u2013180 mg/dL</p>
+          <p className="text-[11px] text-muted-foreground">ADA target: \u226570%</p>
         </div>
       </CardContent>
     </Card>
@@ -68,19 +72,19 @@ export default function DashboardPanel() {
 
   return (
     <ScrollArea className="h-full">
-      <div className="p-4 space-y-4">
+      <div className="p-4 space-y-4 bg-panel/50 min-h-full">
         {/* Header with time range */}
         <div className="flex items-center justify-between animate-fade-in">
           <h2 className="text-base font-display font-bold text-foreground tracking-tight">Dashboard</h2>
-          <div className="flex items-center gap-1 bg-muted/80 rounded-full p-0.5">
+          <div className="flex items-center gap-1 bg-teal-bg/70 rounded-full p-0.5 border border-teal/15">
             {[7, 14, 30].map(d => (
               <button
                 key={d}
                 onClick={() => setDays(d)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 ${
                   days === d
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'bg-teal text-white shadow-sm shadow-teal/30'
+                    : 'text-teal hover:text-teal-vivid'
                 }`}
               >
                 {d}d
@@ -97,34 +101,46 @@ export default function DashboardPanel() {
             <TimeInRangeBar percent={stats.inRangePercent} />
 
             {/* Glucose Chart */}
-            <Card className="animate-fade-in-up stagger-4 overflow-hidden">
-              <CardHeader className="pb-2">
+            <Card className="animate-fade-in-up stagger-4 overflow-hidden border-teal/10">
+              <CardHeader className="pb-2 bg-teal-bg/30">
                 <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <TrendingUp className="size-4 text-primary" />
+                  <div className="w-6 h-6 rounded-md bg-teal/15 flex items-center justify-center">
+                    <TrendingUp className="size-3.5 text-teal" />
+                  </div>
                   Glucose Trends
-                  <Badge variant="secondary" className="text-[11px] font-normal ml-auto">
+                  <Badge variant="secondary" className="text-[11px] font-normal ml-auto bg-teal-bg text-teal border-teal/15">
                     {readings.length} readings
                   </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <GlucoseChart readings={readings} />
+                {loading ? (
+                  <div className="h-56 flex items-center justify-center text-muted-foreground text-sm">Loading...</div>
+                ) : (
+                  <GlucoseChart readings={readings} />
+                )}
               </CardContent>
             </Card>
 
             {/* Medications */}
-            <Card className="animate-fade-in-up stagger-5 overflow-hidden">
-              <CardHeader className="pb-2">
+            <Card className="animate-fade-in-up stagger-5 overflow-hidden border-amber/10">
+              <CardHeader className="pb-2 bg-amber-bg/30">
                 <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <Pill className="size-4 text-amber" />
+                  <div className="w-6 h-6 rounded-md bg-amber/15 flex items-center justify-center">
+                    <Pill className="size-3.5 text-amber" />
+                  </div>
                   Medications
-                  <Badge variant="secondary" className="text-[11px] font-normal ml-auto">
+                  <Badge variant="secondary" className="text-[11px] font-normal ml-auto bg-amber-bg text-amber border-amber/15">
                     {medications.length} active
                   </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <MedicationCard medications={medications} />
+                {loading ? (
+                  <div className="text-muted-foreground text-sm">Loading...</div>
+                ) : (
+                  <MedicationCard medications={medications} />
+                )}
               </CardContent>
             </Card>
 

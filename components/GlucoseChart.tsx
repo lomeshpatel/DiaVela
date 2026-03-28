@@ -28,15 +28,14 @@ function formatTimestamp(ts: string): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
-/* Semantic health colors using OKLCH-aligned hex equivalents */
+/* Vivid health colors */
 const COLORS = {
-  sage: '#5a9a6e',       /* in-range green */
-  amber: '#c88a2e',      /* slightly high */
-  rose: '#c75050',        /* out of range */
-  teal: '#2e8a8a',        /* primary line */
-  tealLight: '#d9f0ef',   /* grid/area */
-  muted: '#94908a',       /* axis text */
-  gridStroke: '#eae6e0',  /* warm grid */
+  sage: '#2ea86b',       /* in-range green — vivid */
+  amber: '#d4920a',      /* slightly high — vivid amber */
+  rose: '#d44040',        /* out of range — vivid rose */
+  teal: '#0f8a8a',        /* primary line — vivid teal */
+  muted: '#888580',       /* axis text */
+  gridStroke: '#e8e4dc',  /* warm grid */
 };
 
 function getColor(value: number): string {
@@ -58,7 +57,7 @@ function CustomDot({ cx, cy, value }: CustomDotProps) {
     <circle
       cx={cx}
       cy={cy}
-      r={4}
+      r={4.5}
       fill={getColor(value)}
       stroke="white"
       strokeWidth={2}
@@ -84,9 +83,9 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
   else if (value > 140) { status = 'Slightly High'; statusColor = COLORS.amber; }
 
   return (
-    <div className="bg-card border border-border rounded-xl p-3 shadow-lg text-sm">
-      <p className="font-bold text-foreground text-base tabular-nums">{value} <span className="text-xs font-normal text-muted-foreground">mg/dL</span></p>
-      <p className="font-medium text-xs mt-0.5" style={{ color: statusColor }}>{status}</p>
+    <div className="bg-card border border-border rounded-xl p-3 shadow-xl text-sm backdrop-blur-sm">
+      <p className="font-bold text-foreground text-lg tabular-nums">{value} <span className="text-xs font-normal text-muted-foreground">mg/dL</span></p>
+      <p className="font-semibold text-xs mt-0.5" style={{ color: statusColor }}>{status}</p>
       <p className="text-muted-foreground text-xs mt-1">{data.formattedTime}</p>
       {data.notes && <p className="text-muted-foreground text-xs mt-1 italic">&ldquo;{data.notes}&rdquo;</p>}
     </div>
@@ -98,11 +97,11 @@ export default function GlucoseChart({ readings }: Props) {
     return (
       <div className="flex items-center justify-center h-56 text-muted-foreground">
         <div className="text-center">
-          <div className="w-12 h-12 rounded-xl bg-teal-light mx-auto mb-3 flex items-center justify-center">
-            <Activity className="size-6 text-primary" />
+          <div className="w-14 h-14 rounded-2xl bg-teal-bg mx-auto mb-3 flex items-center justify-center border border-teal/20">
+            <Activity className="size-7 text-teal" />
           </div>
-          <p className="text-sm font-medium">No glucose readings yet</p>
-          <p className="text-xs text-muted-foreground/70 mt-1">Ask DiaVela to log your first reading</p>
+          <p className="text-sm font-semibold text-foreground">No glucose readings yet</p>
+          <p className="text-xs text-muted-foreground mt-1">Ask DiaVela to log your first reading</p>
         </div>
       </div>
     );
@@ -137,9 +136,9 @@ export default function GlucoseChart({ readings }: Props) {
           />
           <Tooltip content={<CustomTooltip />} />
 
-          <ReferenceLine y={70} stroke={COLORS.rose} strokeDasharray="6 3" strokeWidth={1} strokeOpacity={0.5} />
-          <ReferenceLine y={140} stroke={COLORS.sage} strokeDasharray="6 3" strokeWidth={1} strokeOpacity={0.5} />
-          <ReferenceLine y={180} stroke={COLORS.amber} strokeDasharray="6 3" strokeWidth={1} strokeOpacity={0.5} />
+          <ReferenceLine y={70} stroke={COLORS.rose} strokeDasharray="6 3" strokeWidth={1.5} strokeOpacity={0.6} />
+          <ReferenceLine y={140} stroke={COLORS.sage} strokeDasharray="6 3" strokeWidth={1.5} strokeOpacity={0.6} />
+          <ReferenceLine y={180} stroke={COLORS.amber} strokeDasharray="6 3" strokeWidth={1.5} strokeOpacity={0.6} />
 
           <Line
             type="monotone"
@@ -147,20 +146,20 @@ export default function GlucoseChart({ readings }: Props) {
             stroke={COLORS.teal}
             strokeWidth={2.5}
             dot={<CustomDot />}
-            activeDot={{ r: 6, stroke: COLORS.teal, strokeWidth: 2, fill: 'white' }}
+            activeDot={{ r: 7, stroke: COLORS.teal, strokeWidth: 2, fill: 'white' }}
           />
         </LineChart>
       </ResponsiveContainer>
 
       {/* Color legend */}
-      <div className="flex gap-4 mt-1 text-[11px] text-muted-foreground justify-center">
+      <div className="flex gap-4 mt-1 text-[11px] text-muted-foreground justify-center font-medium">
         <span className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ backgroundColor: COLORS.sage }} />
-          70–140 Target
+          70\u2013140 Target
         </span>
         <span className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ backgroundColor: COLORS.amber }} />
-          140–180 High
+          140\u2013180 High
         </span>
         <span className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ backgroundColor: COLORS.rose }} />

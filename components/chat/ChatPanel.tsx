@@ -3,7 +3,7 @@
 import { useRef, useEffect } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport, isToolOrDynamicToolUIPart } from 'ai';
-import { HeartPulse, Activity, Utensils, BookOpen } from 'lucide-react';
+import { HeartPulse, Activity, Utensils, BookOpen, Sparkles } from 'lucide-react';
 import {
   Conversation,
   ConversationContent,
@@ -70,20 +70,21 @@ export default function ChatPanel() {
         <ConversationContent>
           {messages.length === 0 ? (
             <ConversationEmptyState>
-              <div className="flex flex-col items-center gap-4 animate-scale-in">
+              <div className="flex flex-col items-center gap-5 animate-scale-in">
+                {/* Vivid icon composition */}
                 <div className="relative">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-teal-light to-amber-light flex items-center justify-center">
-                    <HeartPulse className="size-10 text-primary" />
+                  <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-teal to-teal-vivid flex items-center justify-center shadow-xl shadow-teal/30 animate-pulse-glow">
+                    <HeartPulse className="size-12 text-white" />
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg bg-amber flex items-center justify-center shadow-sm">
-                    <Activity className="size-3.5 text-white" />
+                  <div className="absolute -bottom-2 -right-2 w-9 h-9 rounded-xl bg-gradient-to-br from-amber to-amber-vivid flex items-center justify-center shadow-lg shadow-amber/30">
+                    <Sparkles className="size-4 text-white" />
                   </div>
                 </div>
                 <div className="text-center">
-                  <h2 className="font-display font-bold text-xl tracking-tight text-foreground">
-                    Welcome to DiaVela
+                  <h2 className="font-display font-bold text-2xl tracking-tight text-foreground">
+                    Welcome to <span className="text-teal">Dia</span><span className="text-amber">Vela</span>
                   </h2>
-                  <p className="text-muted-foreground text-sm leading-relaxed mt-1.5 max-w-xs">
+                  <p className="text-muted-foreground text-sm leading-relaxed mt-2 max-w-sm">
                     Your AI-powered diabetes care assistant. Track glucose, look up nutrition,
                     manage medications, and get evidence-based answers.
                   </p>
@@ -102,12 +103,12 @@ export default function ChatPanel() {
       {messages.length === 0 && (
         <div className="px-4 pb-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center gap-2 mb-2.5">
-            <div className="flex gap-1.5 text-muted-foreground">
-              <Activity className="size-3.5" />
-              <Utensils className="size-3.5" />
-              <BookOpen className="size-3.5" />
+            <div className="flex gap-1.5">
+              <Activity className="size-3.5 text-teal" />
+              <Utensils className="size-3.5 text-amber" />
+              <BookOpen className="size-3.5 text-sage" />
             </div>
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Try asking</span>
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Try asking</span>
           </div>
           <Suggestions>
             {SUGGESTED_PROMPTS.map(prompt => (

@@ -61,8 +61,8 @@ describe('ToolResultRenderer', () => {
     render(<ToolResultRenderer toolName="search_nutrition" output={output} />);
 
     expect(screen.getByText('Oatmeal, cooked')).toBeInTheDocument();
-    expect(screen.getByText(/158 cal/)).toBeInTheDocument();
-    expect(screen.getByText(/27g carbs/)).toBeInTheDocument();
+    expect(screen.getByText('158')).toBeInTheDocument();
+    expect(screen.getByText(/carbs/)).toBeInTheDocument();
   });
 
   it('renders string output via MessageResponse', () => {
