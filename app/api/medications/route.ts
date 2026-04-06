@@ -5,7 +5,7 @@ export const runtime = 'nodejs';
 
 export async function GET() {
   try {
-    const medications = getAllMedications();
+    const medications = await getAllMedications();
     return NextResponse.json({ medications });
   } catch (err) {
     return NextResponse.json(
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const medication = insertMedication(name, dose, schedule_time, notes);
+    const medication = await insertMedication(name, dose, schedule_time, notes);
     return NextResponse.json({ medication }, { status: 201 });
   } catch (err) {
     return NextResponse.json(

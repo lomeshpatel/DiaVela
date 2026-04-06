@@ -31,7 +31,7 @@ export const logGlucoseReadingTool = tool({
   })),
   execute: async (input) => {
     try {
-      const reading = insertGlucoseReading(input.value_mgdl, input.notes);
+      const reading = await insertGlucoseReading(input.value_mgdl, input.notes);
       const status = getGlucoseStatus(input.value_mgdl);
       return {
         success: true,
@@ -53,7 +53,7 @@ export const getGlucoseTrendsTool = tool({
   })),
   execute: async (input): Promise<GlucoseTrends> => {
     const days = input.days ?? 7;
-    const readings = getGlucoseReadings(days);
+    const readings = await getGlucoseReadings(days);
 
     if (readings.length === 0) {
       return { readings: [], stats: { count: 0, average: null, min: null, max: null, inRangePercent: null }, days };

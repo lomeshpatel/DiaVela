@@ -12,7 +12,7 @@ export const addMedicationReminderTool = tool({
   })),
   execute: async (input) => {
     try {
-      const medication = insertMedication(input.name, input.dose, input.schedule_time, input.notes);
+      const medication = await insertMedication(input.name, input.dose, input.schedule_time, input.notes);
       return {
         success: true,
         medication,
@@ -29,7 +29,7 @@ export const listMedicationsTool = tool({
   description: 'List all current medication reminders for the patient.',
   inputSchema: zodSchema(z.object({})),
   execute: async (): Promise<{ medications: Medication[]; count: number }> => {
-    const medications = getAllMedications();
+    const medications = await getAllMedications();
     return { medications, count: medications.length };
   },
 });
