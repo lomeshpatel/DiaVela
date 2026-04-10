@@ -2,7 +2,7 @@ import { embed } from 'ai';
 import { google } from '@ai-sdk/google';
 import { loadVectorStore, VectorEntry } from './vectorStore';
 
-const EMBEDDING_MODEL = google.textEmbeddingModel('text-embedding-004');
+const EMBEDDING_MODEL = google.embedding('gemini-embedding-001');
 
 export async function generateEmbedding(text: string): Promise<number[]> {
   try {
