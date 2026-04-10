@@ -44,8 +44,8 @@ yarn-error.log*
 /data/diavela.db-shm
 /data/diavela.db-wal
 
-# generated embeddings (rebuild with: pnpm ingest)
-/data/vectors.json
+# vectors.json is tracked in git (pre-generated with Google Text Embedding API)
+# Regenerate locally with: pnpm ingest
 
 # typescript
 *.tsbuildinfo

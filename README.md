@@ -90,28 +90,25 @@ Wait for it to finish. You will see a progress bar and then "Done". This only ne
 
 In the app folder, look for a file called `.env.local`. Open it in any text editor (Notepad works fine).
 
-It should look like this:
+A template file called `.env.local.example` is included — copy it to `.env.local` and fill in your keys:
 
 ```
-ANTHROPIC_API_KEY=sk-ant-api03-...
-USDA_API_KEY=DEMO_KEY
-
-# Switch providers by changing AI_PROVIDER (restart dev server)
-AI_PROVIDER=gemini
 GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_key_here
+AI_PROVIDER=gemini
+AI_MODEL=gemini-2.5-flash
 
-# AI_PROVIDER=anthropic
-# (uses existing ANTHROPIC_API_KEY)
+# Database — local dev uses a local SQLite file (no account needed)
+TURSO_DATABASE_URL=file:./data/diavela.db
 
-# Optional: override model name
-# AI_MODEL=gemini-2.5-pro
+# Optional
+USDA_API_KEY=DEMO_KEY
 ```
 
 **Fill in your keys:**
 
-- If using **Gemini**: Replace `your_gemini_key_here` with your Google API key. Make sure `AI_PROVIDER=gemini` is on its own line (no `#` in front).
-- If using **Claude**: Replace the `sk-ant-api03-...` value with your Anthropic key. Then change `AI_PROVIDER=gemini` to `AI_PROVIDER=anthropic`.
-- If you have a **USDA key**: Replace `DEMO_KEY` with your USDA key.
+- Replace `your_gemini_key_here` with your Google API key
+- Leave `TURSO_DATABASE_URL=file:./data/diavela.db` as-is for local development — no Turso account needed locally
+- If you have a **USDA key**: Replace `DEMO_KEY` with your key
 
 Save the file and close it.
 
@@ -343,10 +340,7 @@ curl -X POST http://localhost:3000/api/glucose \
 
 #### Option 3 — Direct Database Entry (advanced)
 
-The app stores all data in a SQLite database file at:
-```
-C:\Users\patel\myprojects\ai-playground\diavela\data\diavela.db
-```
+Locally, the app stores all data in a SQLite file at `data/diavela.db` in the app folder.
 
 You can open this file with a free tool called **DB Browser for SQLite** (https://sqlitebrowser.org) and insert rows directly into the `glucose_readings` or `medications` tables.
 

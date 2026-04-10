@@ -1,24 +1,16 @@
+import { embed } from 'ai';
+import { google } from '@ai-sdk/google';
 import { loadVectorStore, VectorEntry } from './vectorStore';
 
-type EmbeddingPipeline = (texts: string[], options?: object) => Promise<{ data: Float32Array; dims: number[] }[]>;
-
-// Lazy-loaded pipeline to avoid top-level await issues
-let pipelineInstance: EmbeddingPipeline | null = null;
-
-async function getEmbeddingPipeline(): Promise<EmbeddingPipeline> {
-  if (!pipelineInstance) {
-    // Dynamic import to avoid SSR issues
-    const { pipeline } = await import('@huggingface/transformers');
-    pipelineInstance = (await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2')) as unknown as EmbeddingPipeline;
-  }
-  return pipelineInstance!;
-}
+const EMBEDDING_MODEL = google.embedding('gemini-embedding-001');
 
 export async function generateEmbedding(text: string): Promise<number[]> {
   try {
-    const pipe = await getEmbeddingPipeline();
-    const output = await pipe([text], { pooling: 'mean', normalize: true });
-    return Array.from(output[0].data);
+    const { embedding } = await embed({
+      model: EMBEDDING_MODEL,
+      value: text,
+    });
+    return embedding;
   } catch (err) {
     console.error('[embeddings] generateEmbedding failed:', err);
     throw new Error('Embedding generation failed — knowledge search unavailable.');

@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const days = searchParams.get('days');
 
-    const readings = days ? getGlucoseReadings(parseInt(days)) : getAllGlucoseReadings();
+    const readings = days ? await getGlucoseReadings(parseInt(days)) : await getAllGlucoseReadings();
     return NextResponse.json({ readings });
   } catch (err) {
     return NextResponse.json(
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'value_mgdl must be a number' }, { status: 400 });
     }
 
-    const reading = insertGlucoseReading(value_mgdl, notes);
+    const reading = await insertGlucoseReading(value_mgdl, notes);
     return NextResponse.json({ reading }, { status: 201 });
   } catch (err) {
     return NextResponse.json(
